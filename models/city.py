@@ -7,6 +7,7 @@ import os
 
 STORE = os.getenv('HBNB_TYPE_STORAGE')
 
+
 class City(BaseModel, Base):
     """ The city class, contains state ID and name """
     if STORE == 'db':
