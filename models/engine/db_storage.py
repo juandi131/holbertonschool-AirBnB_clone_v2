@@ -10,6 +10,7 @@ from models.city import City
 from models.state import State
 from models.amenity import Amenity
 from models.review import Review
+
 USER = os.getenv('HBNB_MYSQL_USER')
 PASS = os.getenv('HBNB_MYSQL_PWD')
 HOST = os.getenv('HBNB_MYSQL_HOST')
@@ -23,27 +24,26 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        self.__engine =\
-            create_engine(f"mysql+mysqldb://{USER}:{PASS}@{HOST}/{DATA}",
-                          pool_pre_ping=True)
+        self.__engine = create_engine(
+            f"mysql+mysqldb://{USER}:{PASS}@{HOST}/{DATA}", pool_pre_ping=True)
         if ENV == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ returns a dict """
-        classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
+        classes = {'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Review': Review}
+
         dic = {}
         if cls is not None:
+            class_name = classes[cls].__name__
             for obj in self.__session.query(classes[cls]).all():
-                dic[f"{obj.__class__.__name__}.{obj.id}"] = obj
+                dic[f"{class_name}.{obj.id}"] = obj
         else:
-            for clas in classes.values():
-                for obj in self.__session.query(clas).all():
-                    dic[f"{obj.__class__.__name__}.{obj.id}"] = obj
+            for class_name, class_instance in classes.items():
+                for obj in self.__session.query(class_instance).all():
+                    dic[f"{class_name}.{obj.id}"] = obj
         return dic
 
     def new(self, obj):
@@ -68,5 +68,5 @@ class DBStorage:
             self.save()
 
     def close(self):
-        """ deserialize the JSON file """
+        """ close the session """
         self.__session.remove()
