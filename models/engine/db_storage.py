@@ -49,7 +49,7 @@ class DBStorage:
     def new(self, obj):
         """ add object to the current database """
         self.__session.add(obj)
-        self.__session.commit()
+        self.save()
 
     def reload(self):
         """ creates all tables """
