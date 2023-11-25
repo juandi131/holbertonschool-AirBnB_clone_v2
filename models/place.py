@@ -1,11 +1,11 @@
+#!/usr/bin/python3
+""" Place Module for HBNB project """
 from models.base_model import BaseModel
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
-import os
 
-STORE = os.getenv('HBNB_TYPE_STORAGE')
 
-class Place(BaseModel, Base):
+class Place(BaseModel):
     """ A place to stay """
     __tablename__ = 'places'
 
@@ -21,6 +21,3 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
 
     amenity_ids = []
-
-    if STORE != 'db':
-        from models import City

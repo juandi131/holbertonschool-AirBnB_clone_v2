@@ -69,6 +69,5 @@ class BaseModel:
 
     def delete(self):
         """ delete delete """
-        from models.engine.db_storage import delete
+        from models.engine.file_storage import delete
         delete(self)
-    
