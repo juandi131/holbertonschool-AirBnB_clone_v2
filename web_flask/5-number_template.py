@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" start web application """
+""" start"""
 
 from flask import Flask, render_template
 
@@ -25,7 +25,7 @@ def Text(text):
 
 @app.route('/python/', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def Pyth(text='is_cool'):
+def Py(text='is_cool'):
     text = text.replace('_', ' ')
     return f"Python {text}"
 

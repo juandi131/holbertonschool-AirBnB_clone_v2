@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" start web application """
+""" start"""
 
 from flask import Flask, render_template
 from models import storage
@@ -13,10 +13,6 @@ app = Flask(__name__)
 def lists():
     return render_template('7-states_list.html', data=storage.all(State))
 
-
-@app.teardown_appcontext
-def close(exception=None):
-    storage.close()
 
 
 if __name__ == "__main__":
