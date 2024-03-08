@@ -6,15 +6,13 @@
     <BODY>
         <H1>States</H1>
         <UL>
-            {% for state in data1.values() | sort(attribute='name') %}
-            <LI>{{ state.id }}: <B>{{ state.name }}</B>
-                <UL>
-                    {% for city in data2.values() | sort(attribute='name') %}
-                    {% if city.state_id == state.id %}
-                    <LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
-                    {% endif %}
-                    {% endfor %}
-                </UL>
+            {% for item_s in states.values()|sort(attribute="name") %}
+            <LI> {{item_s.id}}: <B>{{item_s.name}}</B>
+                    <UL>
+                        {% for item_c in item_s.cities|sort(attribute="name") %}
+                        <LI> {{item_c.id}}: <B>{{item_c.name}}</B></LI>
+                        {% endfor %}
+                    </UL>
             </LI>
             {% endfor %}
         </UL>

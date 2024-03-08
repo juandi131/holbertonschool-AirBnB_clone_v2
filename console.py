@@ -118,27 +118,31 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        args = args.split(" ")
-        if args[0] not in HBNBCommand.classes:
+        elif args.split()[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args[0]]()
-        for arg in args[1:]:
-            argsV = arg.split("=")
-            try:
-                if argsV[1][0] == "\"" and argsV[1][-1]:
-                    argsV[1] = argsV[1].replace("_", " ")
-                    setattr(new_instance, str(argsV[0]), str(argsV[1][1:-1]))
-                elif "." in argsV[1]:
-                    argsV[1] = float(argsV[1])
-                    setattr(new_instance, argsV[0], argsV[1])
-                else:
-                    argsV[1] = int(argsV[1])
-                    setattr(new_instance, argsV[0], argsV[1])
-            except Exception:
-                pass
-        new_instance.save()
+        else:
+            kwargs = {}
+            for arg in args.split():
+                if "=" in arg:
+                    key, value = arg.split("=")
+                    if value[0] == '"' and value[-1] == '"':
+                        value = value[1:-1].replace("_", " ") \
+                            .replace('\\"', '"')
+                    elif "." in value:
+                        value = float(value)
+                    else:
+                        try:
+                            value = int(value)
+                        except Exception as e:
+                            continue
+                    kwargs[key] = value
+        new_instance = HBNBCommand.classes[args.split()[0]]()
+        new_instance.__dict__.update(kwargs)
+        storage.new(new_instance)
+        storage.save()
         print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -220,7 +224,7 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage.all(args).items():
+            for k, v in storage.all().items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
